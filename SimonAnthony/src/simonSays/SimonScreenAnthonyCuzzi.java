@@ -99,29 +99,14 @@ public class SimonScreenAnthonyCuzzi extends ClickableScreen implements Runnable
 		}
 		return getMove(b);
 	}
-	
-	/**
-	Placeholder until partner finishes creation of Move class
-	*/
-	private MoveInterfaceAnthonyCuzzi getMove(ButtonInterfaceAnthonyCuzzi b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	/**
-	Placeholder until partner finishes implementation of ProgressInterface
-	*/
-	private ProgressInterfaceAnthonyCuzzi getProgress() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private void addButtons() {
 		int numberOfButtons = 6;
 		Color[] Colors = {Color.red,Color.blue,Color.green,Color.orange,Color.yellow,Color.magenta};
 		for(int i = 0; i < numberOfButtons; i++){
 			 final ButtonInterfaceAnthonyCuzzi b = getAButton();
-			 b.setColor(Colors[i]); 
+			 	b.setColor(Colors[i]); 
 			    b.setX(60 + i*20);
 			    b.setY(60);
 			    b.setAction(new Action(){
@@ -162,14 +147,21 @@ public class SimonScreenAnthonyCuzzi extends ClickableScreen implements Runnable
 	*/
 
 	private ButtonInterfaceAnthonyCuzzi getAButton() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Button();
+	}
+	
+	/**
+	Placeholder until partner finishes creation of Move class
+	*/
+	private MoveInterfaceAnthonyCuzzi getMove(ButtonInterfaceAnthonyCuzzi b) {
+		return new Move(b);
 	}
 
-	@Override
-	public void initObjects(List<Visible> viewObjects) {
-		// TODO Auto-generated method stub
-		
+	/**
+	Placeholder until partner finishes implementation of ProgressInterface
+	*/
+	private ProgressInterfaceAnthonyCuzzi getProgress() {
+		return new Progress();
 	}
 
 }
