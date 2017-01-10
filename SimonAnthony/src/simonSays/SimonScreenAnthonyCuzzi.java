@@ -10,7 +10,7 @@ import guiPractice.components.TextLabel;
 import guiPractice.components.Visible;
 import guiPractice.sampleGames.ClickableScreen;
 
-public class SimonScreenAnthonyCuzzi extends ClickableScreen implements Runnable{
+public class SimonScreenAnthonyCuzzi extends guiPractice.ClickableScreen implements Runnable{
 	
 	TextLabel label;
 	ButtonInterfaceAnthonyCuzzi[] button;
@@ -162,6 +162,12 @@ public class SimonScreenAnthonyCuzzi extends ClickableScreen implements Runnable
 	*/
 	private ProgressInterfaceAnthonyCuzzi getProgress() {
 		return new Progress();
+	}
+
+	@Override
+	public void initObjects(List<Visible> arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

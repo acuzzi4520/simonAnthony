@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 
 public class Progress extends Component implements ProgressInterfaceAnthonyCuzzi {
 	
@@ -15,7 +16,7 @@ public class Progress extends Component implements ProgressInterfaceAnthonyCuzzi
 	private static int h = 100;
 
 	public Progress() {
-		super(70,70,w,h);
+		super();
 	}
 
 	@Override
@@ -36,6 +37,7 @@ public class Progress extends Component implements ProgressInterfaceAnthonyCuzzi
 		update();
 	}
 	
+	@Override
 	public void update(Graphics2D g){
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		FontMetrics fm = g.getFontMetrics();
@@ -49,4 +51,23 @@ public class Progress extends Component implements ProgressInterfaceAnthonyCuzzi
 		}
 	}
 
+	@Override
+	public BufferedImage getImage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAnimated() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
 }
