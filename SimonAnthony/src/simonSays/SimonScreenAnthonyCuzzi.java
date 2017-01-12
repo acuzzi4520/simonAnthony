@@ -5,163 +5,164 @@ import java.util.ArrayList;
 import java.util.List;
 
 import guiPractice.components.Action;
-import guiPractice.components.Button;
 import guiPractice.components.TextLabel;
 import guiPractice.components.Visible;
-import guiPractice.sampleGames.ClickableScreen;
 
 public class SimonScreenAnthonyCuzzi extends guiPractice.ClickableScreen implements Runnable{
-	
-	TextLabel label;
-	ButtonInterfaceAnthonyCuzzi[] button;
-	ProgressInterfaceAnthonyCuzzi progress;
-	ArrayList<MoveInterfaceAnthonyCuzzi> pattern;
-	
-	int roundNumber;
-	boolean acceptingInput;
-	int sequenceIndex;
-	int lastSelectedButton;
 
-	public SimonScreenAnthonyCuzzi() {
-		// TODO Auto-generated constructor stub
+	private guiPractice.components.TextLabel label;
+	private ButtonInterfaceAnthonyCuzzi[] buttons;
+	private ProgressInterfaceAnthonyCuzzi progress;
+	private ArrayList<MoveInterfaceAnthonyCuzzi> sequence; 
+	private int roundNumber;
+	private boolean acceptingInput;
+	private int sequenceIndex;
+	private int lastSelected;
+
+	public SimonScreenAnthonyCuzzi(int height, int width) {
+		super(500, 500);
+		Thread screen = new Thread(this);
+		screen.start();
 	}
 
-	@Override
-	public void run() {
-		label.setText("");
-	    nextRound();
-	}
-	
-	public void nextRound(){
-		acceptingInput = false;
-		roundNumber += 1;
-		pattern.add(randomMove());
-		progress.setRound(roundNumber);
-		progress.setSequenceSize(pattern.size());
-		changeText("Simon's Turn");
-		label.setText("");
-		playSequence();
-		changeText("Your turn");
-		acceptingInput = true;
-		sequenceIndex = 0;
-	}
 
-	private void playSequence() {
-		ButtonInterfaceAnthonyCuzzi b = null;
-		for(int i = 0; i < pattern.size(); i++){
-			if(b != null){
-				b.dim();
-				b = ((MoveInterfaceAnthonyCuzzi) pattern).getButton();
-				b.highlight();
-				int sleepTime = 800-(roundNumber*20);
-				try {
-					Thread.sleep(sleepTime);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		b.dim();
-	}
-
-	private void changeText(String string) {
-		label = new TextLabel(130,230,300,40,string);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	public void initAllObjects(List<Visible> viewObjects) {
-		addButtons();
+		Color[] colors = {Color.red, Color.blue, new Color(240,160,70), new Color(20,255,140), Color.yellow, new Color(180,90,210)};
+		int buttonCount = 6;
+		buttons = new ButtonInterfaceAnthonyCuzzi[buttonCount];
+		for(int i = 0; i < buttonCount; i++ ){
+			buttons[i] = getAButton();
+			buttons[i].setColor(colors[i]);
+			buttons[i].setX(160 + (int)(100*Math.cos(i*2*Math.PI/(buttonCount))));
+			buttons[i].setY(200 - (int)(100*Math.sin(i*2*Math.PI/(buttonCount))));
+			final ButtonInterfaceAnthonyCuzzi b = buttons[i];
+			System.out.println(b+" has x = "+b.getX()+", y ="+b.getY());
+			b.dim();
+			buttons[i].setAction(new Action() {
+
+				public void act() {
+
+						Thread buttonPress = new Thread(new Runnable() {
+							
+							public void run() {
+								b.highlight();
+								try {
+									Thread.sleep(500);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+								b.dim();
+								
+							}
+						});
+						buttonPress.start();
+						
+
+						if(acceptingInput && sequence.get(sequenceIndex).getButton() == b){
+							sequenceIndex++;
+						}else if(acceptingInput){
+							gameOver();
+							return;
+						}
+						if(sequenceIndex == sequence.size()){
+							Thread nextRound = new Thread(SimonScreenAnthonyCuzzi.this);
+							nextRound.start();
+						}
+					}
+
+			});
+			viewObjects.add(buttons[i]);
+		}
 		progress = getProgress();
 		label = new TextLabel(130,230,300,40,"Let's play Simon!");
-		pattern = new ArrayList<MoveInterfaceAnthonyCuzzi>();
+		sequence = new ArrayList<MoveInterfaceAnthonyCuzzi>();
 		//add 2 moves to start
-		lastSelectedButton = -1;
-		pattern.add(randomMove());
-		pattern.add(randomMove());
+		lastSelected = -1;
+		sequence.add(randomMove());
+		sequence.add(randomMove());
 		roundNumber = 0;
+
 		viewObjects.add(progress);
 		viewObjects.add(label);
 	}
 
+	public void gameOver() {
+		progress.gameOver();
+	}
+
+	public void nextRound() {
+		acceptingInput = false;
+		roundNumber ++;
+		progress.setRound(roundNumber);
+		sequence.add(randomMove());
+		progress.setSequenceSize(sequence.size());
+		changeText("Simon's turn.");
+		label.setText("");
+		showSequence();
+		changeText("Your turn.");
+		label.setText("");
+		acceptingInput = true;
+		sequenceIndex = 0;
+	}
+
+
 	private MoveInterfaceAnthonyCuzzi randomMove() {
-		ButtonInterfaceAnthonyCuzzi b = null;
-		int rdm = (int)(1 + (Math.random()*6));
-		if(rdm == lastSelectedButton){
-			while(rdm == lastSelectedButton){
-				rdm = (int)(1 + (Math.random()*6));
-			}
-			b = (ButtonInterfaceAnthonyCuzzi) button[rdm];
+		int select = (int) (Math.random()*buttons.length);
+		while(select == lastSelected){
+			select = (int) (Math.random()*buttons.length);
 		}
-		return getMove(b);
+		lastSelected = select;
+		return new Move(buttons[select]);
 	}
 
-
-	private void addButtons() {
-		int numberOfButtons = 6;
-		Color[] Colors = {Color.red,Color.blue,Color.green,Color.orange,Color.yellow,Color.magenta};
-		for(int i = 0; i < numberOfButtons; i++){
-			 final ButtonInterfaceAnthonyCuzzi b = getAButton();
-			 	b.setColor(Colors[i]); 
-			    b.setX(60 + i*20);
-			    b.setY(60);
-			    b.setAction(new Action(){
-
-			    	public void act(){
-			    		if(acceptingInput){
-			    			Thread blink = new Thread(new Runnable(){
-
-			    				public void run(){
-			    					 b.highlight();
-			    					 Thread.sleep(800);
-			    					 b.dim();
-			    				}
-
-			    				});
-			    			blink.start();
-			    			
-			    		}
-			    		if(b == pattern.get(sequenceIndex).getButton()){
-			    			sequenceIndex++;
-			    		}else{
-			    			progress.gameOver();
-			    		}
-			    	}
-
-			    	}); 
-		}
-		if(sequenceIndex == pattern.size()){
-		Thread nextRound = new Thread(SimonScreenAnthonyCuzzi.this);
-		nextRound.start(); 
-		}
-		viewObjects.add(b);
+	private ProgressInterfaceAnthonyCuzzi getProgress() {
+		return new Progress();
 	}
-	
-	/**
-	Placeholder until partner finishes creation of Button class
-	 * @return 
-	*/
 
 	private ButtonInterfaceAnthonyCuzzi getAButton() {
 		return new Button();
 	}
-	
-	/**
-	Placeholder until partner finishes creation of Move class
-	*/
-	private MoveInterfaceAnthonyCuzzi getMove(ButtonInterfaceAnthonyCuzzi b) {
-		return new Move(b);
+
+	private void changeText(String string) {
+		try{
+			label.setText(string);
+			Thread.sleep(1000);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
-	/**
-	Placeholder until partner finishes implementation of ProgressInterface
-	*/
-	private ProgressInterfaceAnthonyCuzzi getProgress() {
-		return new Progress();
+	public void run() {
+		changeText("");
+//		while(true){
+			nextRound();
+//			synchronized (this) {
+//
+//				try {
+//					wait();
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//
+//			}
+//		}
+	}
+
+
+	private void showSequence() {
+		ButtonInterfaceAnthonyCuzzi b = null;
+		for(MoveInterfaceAnthonyCuzzi m: sequence){
+			if(b!=null)b.dim();
+			b = m.getButton();
+			b.highlight();
+			try {
+				Thread.sleep((long)(2000*(2.0/(roundNumber+2))));
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		b.dim();
 	}
 
 	@Override

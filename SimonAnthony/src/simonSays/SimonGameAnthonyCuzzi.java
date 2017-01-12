@@ -4,23 +4,20 @@ import guiPractice.GUIApplication;
 
 public class SimonGameAnthonyCuzzi extends GUIApplication{
 
-	public SimonGameAnthonyCuzzi() {
+	public SimonGameAnthonyCuzzi(int width,int height) {
 		super();
-		Thread app = new Thread(this);
-		app.start();
 	}
 
-	public static void main(String[] args) {
-		SimonScreenAnthonyCuzzi ssac =
-				new SimonScreenAnthonyCuzzi();
-		setScreen(ssac);
-	}
 
 	@Override
 	protected void initScreen() {
-		SimonGameAnthonyCuzzi game = new SimonGameAnthonyCuzzi();
+		SimonScreenAnthonyCuzzi s = new SimonScreenAnthonyCuzzi(getWidth(), getHeight());
+		setScreen(s);
+	}
+
+	public static void main(String[] args) {
+		SimonGameAnthonyCuzzi game = new SimonGameAnthonyCuzzi(800, 500);
 		Thread app = new Thread(game);
 		app.start();
 	}
-
 }
