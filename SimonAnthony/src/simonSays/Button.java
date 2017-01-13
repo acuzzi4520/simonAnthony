@@ -1,10 +1,11 @@
 package simonSays;
 
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import guiPractice.components.Action;
+import guiPractice.components.Component;
 
 
 public class Button extends Component implements ButtonInterfaceAnthonyCuzzi{
@@ -15,7 +16,7 @@ public class Button extends Component implements ButtonInterfaceAnthonyCuzzi{
 	private Action action;
 
 	public Button() {
-		
+		super(50,50,60,60);
 	}
 
 	@Override
@@ -50,30 +51,21 @@ public class Button extends Component implements ButtonInterfaceAnthonyCuzzi{
 
 	@Override
 	public void act() {
-		// TODO Auto-generated method stub
-		
+		action.act();
 	}
 
 	@Override
-	public boolean isHovered(int arg0, int arg1) {
-		// TODO Auto-generated method stub
+	public boolean isHovered(int x, int y) {
+		if(x > getX() && x < getX() + getWidth() && y > getY() && y < getY() + getHeight()){
+			return true;
+		}
 		return false;
 	}
 
-	@Override
-	public BufferedImage getImage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
-	public boolean isAnimated() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void update() {
+	public void update(Graphics2D arg0) {
 		// TODO Auto-generated method stub
 		
 	}

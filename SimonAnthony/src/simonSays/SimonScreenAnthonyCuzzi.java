@@ -33,8 +33,8 @@ public class SimonScreenAnthonyCuzzi extends guiPractice.ClickableScreen impleme
 		for(int i = 0; i < buttonCount; i++ ){
 			buttons[i] = getAButton();
 			buttons[i].setColor(colors[i]);
-			buttons[i].setX(160 + (int)(100*Math.cos(i*2*Math.PI/(buttonCount))));
-			buttons[i].setY(200 - (int)(100*Math.sin(i*2*Math.PI/(buttonCount))));
+			buttons[i].setX(160+(i*50));
+			buttons[i].setY(200);
 			final ButtonInterfaceAnthonyCuzzi b = buttons[i];
 			System.out.println(b+" has x = "+b.getX()+", y ="+b.getY());
 			b.dim();
